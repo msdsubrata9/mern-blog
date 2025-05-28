@@ -6,6 +6,7 @@ const User = require("./modals/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+require("dotenv").config();
 const secret = "dfsajkhdjfah134123hsadjhksdjfadks";
 const saltRounds = 10;
 
@@ -13,9 +14,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
 
-mongoose.connect(
-  "mongodb+srv://msdsubrata9:Subrata1234@namastenode.qgsag.mongodb.net/blogApplication"
-);
+mongoose.connect(process.env.DB_URI);
 
 app.post("/register", async (req, res) => {
   const { username, password } = req.body;
