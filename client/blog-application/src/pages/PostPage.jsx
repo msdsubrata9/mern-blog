@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { UserContext } from "../utils/UserContext";
 
 const PostPage = () => {
   const { id } = useParams();
   const [postInfo, setPostInfo] = useState(null);
+  const { userInfo } = useContext(UserContext);
+  const navigate = useNavigate();
   useEffect(() => {
     fetch(`http://localhost:4000/post/${id}`)
       .then((response) => response.json())
@@ -17,6 +20,11 @@ const PostPage = () => {
       </div>
       <h1>{postInfo.title}</h1>
       <div dangerouslySetInnerHTML={{ __html: postInfo.content }} />
+      {userInfo.id === postInfo.author._id && (
+        <button onClick={() => navigate(`/edit/${postInfo._id}`)}>
+          Edit this Post
+        </button>
+      )}
     </div>
   );
 };
