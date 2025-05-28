@@ -1,23 +1,19 @@
 import React from "react";
+import { formatISO9075 } from "date-fns";
 
-const Post = () => {
+const Post = ({ title, cover, summary, createdAt, author }) => {
   return (
     <div className="post">
-      <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*zWSeHOIq1C4jlSKBwm-oEQ.png" />
+      <img src={"http://localhost:4000/" + cover} />
       <div className="texts">
-        <h4>
-          🚀 My Agoda Frontend Interview Experience | 82 LPA | Senior Software
-          Engineer
-        </h4>
+        <h4>{title}</h4>
         <p className="info">
           <a href="" className="author">
-            Subrata Saha
+            {author?.username}
           </a>
-          <time>2025-01-06 16:25</time>
+          <time>{formatISO9075(new Date(createdAt))}</time>
         </p>
-        <p>
-          🏢 Agoda is a major global travel platform headquartered in Singapore.
-        </p>
+        <p>{summary}</p>
       </div>
     </div>
   );

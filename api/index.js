@@ -17,6 +17,7 @@ const saltRounds = 10;
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use(express.json());
 app.use(cookieParser());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 mongoose.connect(process.env.DB_URI);
 
@@ -67,16 +68,30 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
 
-  const { title, summary, content } = req.body;
+  const { token } = req.cookies;
 
-  const postDoc = await Post.create({
-    title,
-    summary,
-    content,
-    cover: newPath,
+  jwt.verify(token, secret, {}, async (err, info) => {
+    if (err) throw new Error(err);
+    const { title, summary, content } = req.body;
+
+    const postDoc = await Post.create({
+      title,
+      summary,
+      content,
+      cover: newPath,
+      author: info.id,
+    });
+
+    res.json(postDoc);
   });
+});
 
-  res.json(postDoc);
+app.get("/post", async (req, res) => {
+  const posts = await Post.find()
+    .populate("author", ["username"])
+    .sort({ createdAt: -1 })
+    .limit(20);
+  res.json(posts);
 });
 
 app.listen(4000);
