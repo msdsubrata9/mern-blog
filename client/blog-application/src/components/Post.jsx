@@ -1,12 +1,17 @@
 import React from "react";
 import { formatISO9075 } from "date-fns";
+import { Link } from "react-router-dom";
 
-const Post = ({ title, cover, summary, createdAt, author }) => {
+const Post = ({ _id, title, cover, summary, createdAt, author }) => {
   return (
     <div className="post">
-      <img src={"http://localhost:4000/" + cover} />
+      <Link to={`/post/${_id}`}>
+        <img src={"http://localhost:4000/" + cover} />
+      </Link>
       <div className="texts">
-        <h4>{title}</h4>
+        <Link to={`/post/${_id}`}>
+          <h4>{title}</h4>
+        </Link>
         <p className="info">
           <a href="" className="author">
             {author?.username}
